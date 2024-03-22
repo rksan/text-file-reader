@@ -1,5 +1,5 @@
 {
-  "name": "@rksan/typescript-template",
+  "name": "@rksan/test-file-reader",
   "version": "0.0.1",
   "scripts": {
     "tsc:init": "tsc --init",
