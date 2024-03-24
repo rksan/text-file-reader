@@ -1,0 +1,19 @@
+# dir
+.github
+.nyc_output
+.vscode
+configs
+src
+test
+demo
+
+# configs
+.eslintrc*
+.gitignore*
+.nycrc*
+.pretiierrc*
+
+# files
+*.tgz
+tsconfig.json
+tsconfig.*.json

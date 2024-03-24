@@ -1,24 +1,17 @@
-import { TEXT_CHAR_CODE, TEXT_CHAR_CONST } from "@/const";
-import { CTextStringReader } from "./TextStringReader";
+import type { ITextReader, ITextFile } from "@/interfaces";
+import { TEXT_CONST } from "@/const";
+import { CLineStringReader } from "./LineStringReader";
 
-export class CTextFile {
+export class CTextFile implements ITextFile {
   private _reader: FileReader | undefined;
 
-  get isOpen() {
-    return this._reader !== undefined;
-  }
-
-  close(): void {
-    this._reader?.abort();
-  }
-
-  open(file: File, encoding?: string): Promise<CTextStringReader> {
+  open(file: File, encoding?: string): Promise<ITextReader> {
     const reader = (this._reader = new FileReader());
 
     return new Promise((resolve, reject) => {
       reader.onloadend = () => {
         const result = reader.result;
-        resolve(new CTextStringReader(bufferToString(result, encoding)));
+        resolve(new CLineStringReader(bufferToString(result, encoding)));
       };
 
       reader.onabort = () => {
@@ -32,6 +25,14 @@ export class CTextFile {
       reader.readAsArrayBuffer(file);
     });
   }
+
+  get isOpen() {
+    return this._reader !== undefined;
+  }
+
+  close(): void {
+    this._reader?.abort();
+  }
 }
 
 const bufferToString = (
@@ -39,7 +40,7 @@ const bufferToString = (
   encoding?: string
 ) => {
   if (result === null) {
-    return TEXT_CHAR_CONST.EOF;
+    return TEXT_CONST.CHAR.EOF;
   } else if (result instanceof ArrayBuffer) {
     return encodeString(result, encoding);
   } else {
@@ -48,6 +49,6 @@ const bufferToString = (
 };
 
 const encodeString = (buffer: ArrayBuffer, encoding?: string) => {
-  const decorder = new TextDecoder(encoding || TEXT_CHAR_CODE.UTF_8);
+  const decorder = new TextDecoder(encoding || TEXT_CONST.CODE.UTF_8);
   return decorder.decode(buffer);
 };
