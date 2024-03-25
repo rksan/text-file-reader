@@ -2,7 +2,7 @@
 .github
 .nyc_output
 .vscode
-configs
+.configs
 src
 test
 demo
