@@ -1,6 +1,6 @@
 {
   "name": "@rksan/text-file-reader",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "scripts": {
     "tsc:init": "tsc --init",
     "pretest": "rm -rf .nyc_output && rm -rf tsconfig.tsnode.json && tsc -p ./tsconfig.json --showConfig > tsconfig.tsnode.json",

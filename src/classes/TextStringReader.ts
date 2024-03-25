@@ -2,42 +2,37 @@ import { TEXT_CONST } from "@/const";
 import { ITextReader } from "@/interfaces";
 
 export class CTextStringReader implements ITextReader {
-  private _buffer: string;
-  private _idx: number;
+  private _bufferArray: string[];
+  private _currentChar: string | null;
+  private _count: number;
 
   /**
    *
    * @param buffer All or part of text data.
    */
   constructor(buffer: string) {
-    this._buffer = buffer;
-    this._idx = 0;
+    this._bufferArray = Array.from(buffer);
+    this._currentChar = null;
+    this._count = 0;
   }
 
   /**
    * end of buffer.
    */
   get isEOB(): boolean {
-    return this._buffer.length < this.position;
+    return this._bufferArray.length === 0;
   }
 
   /**
-   * The position of the character being read.
+   * The position of the character being read.( 0 < n)
    */
   get position(): number {
-    return this._idx + 1;
+    return this._count + 1;
   }
 
-  protected get buffer(): string {
-    return this._buffer;
-  }
-
-  protected get idx(): number {
-    return this._idx;
-  }
-
-  protected seek(): number {
-    return this._idx++;
+  protected shift(): string {
+    const char = this._bufferArray.shift();
+    return char === undefined ? TEXT_CONST.CHAR.EOF : char;
   }
 
   /**
@@ -45,9 +40,11 @@ export class CTextStringReader implements ITextReader {
    * @returns One character.
    */
   peek() {
-    return this.isEOB === true
-      ? TEXT_CONST.CHAR.EOF
-      : this._buffer.charAt(this._idx);
+    if (this._currentChar === null) {
+      this._currentChar = this.shift();
+    }
+
+    return this._currentChar;
   }
 
   /**
@@ -57,7 +54,8 @@ export class CTextStringReader implements ITextReader {
   next() {
     const char = this.peek();
 
-    this.seek();
+    this._currentChar = null;
+    this._count++;
 
     return char;
   }

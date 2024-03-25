@@ -12,7 +12,10 @@ describe("index.ts", () => {
     const reader: ITextReader = new CTextStringReader(buffer);
 
     for (let i = 0; i < buffer.length; i++) {
-      assert.isOk(reader.position === i + 1, "position fail");
+      assert.isOk(
+        reader.position === i + 1,
+        `position fail[${reader.position} !== ${i + 1}]`
+      );
       assert.isOk(reader.isEOB === false, "isEOB =!== false");
       assert.isOk(reader.peek() === reader.next(), "peek() !== next()");
     }
